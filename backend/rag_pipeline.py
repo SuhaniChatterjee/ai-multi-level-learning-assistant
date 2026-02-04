@@ -2,32 +2,43 @@ from backend.prompt_templates import get_prompt_template
 from backend.llm_engine import generate_response
 
 
-def run_rag_pipeline(
-    question: str,
-    context: str,
-    difficulty_level: str
-) -> str:
+def build_prompt(question: str, context: str, level: str) -> str:
     """
-    Combines retrieved context, difficulty-level prompt,
-    and user question to generate a final answer.
+    Builds the final prompt sent to the LLM.
     """
 
-    instruction = get_prompt_template(difficulty_level)
+    instructions = get_prompt_template(level)
 
-    final_prompt = f"""
+    prompt = f"""
 You are a helpful AI tutor.
 
 Instructions:
-{instruction}
+{instructions}
 
-Context (use ONLY this information):
+Document Context:
 {context}
 
-Question:
+User Question:
 {question}
 
 Answer:
 """
+    return prompt
 
-    response = generate_response(final_prompt)
-    return response
+
+def run_rag_pipeline(question: str, context: str, difficulty_level: str) -> str:
+    """
+    Main RAG pipeline:
+    - validates input
+    - builds prompt
+    - sends prompt to LLM
+    """
+
+    if not question.strip():
+        return "Please enter a valid question."
+
+    if not context.strip():
+        return "No relevant information found in the uploaded documents."
+
+    prompt = build_prompt(question, context, difficulty_level)
+    return generate_response(prompt)

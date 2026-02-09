@@ -1,16 +1,17 @@
-from pypdf import PdfReader
+import os
 
 
-def load_pdf(file_path: str) -> str:
+def load_documents(folder_path="data/raw_docs"):
     """
-    Loads a PDF file and returns all extracted text as a single string.
+    Loads all .txt documents from a folder
+    and returns a list of raw text strings.
     """
-    reader = PdfReader(file_path)
-    text = ""
+    documents = []
 
-    for page in reader.pages:
-        page_text = page.extract_text()
-        if page_text:
-            text += page_text + "\n"
+    for filename in os.listdir(folder_path):
+        if filename.endswith(".txt"):
+            file_path = os.path.join(folder_path, filename)
+            with open(file_path, "r", encoding="utf-8") as f:
+                documents.append(f.read())
 
-    return text
+    return documents

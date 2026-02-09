@@ -1,18 +1,17 @@
-def chunk_text(
-    text: str,
-    chunk_size: int = 500,
-    overlap: int = 50
-) -> list[str]:
+def chunk_text(documents, chunk_size=200, overlap=50):
     """
-    Splits text into overlapping chunks for better semantic retrieval.
+    Splits documents into overlapping chunks.
+    This improves retrieval quality.
     """
     chunks = []
-    start = 0
 
-    while start < len(text):
-        end = start + chunk_size
-        chunk = text[start:end]
-        chunks.append(chunk)
-        start = end - overlap
+    for doc in documents:
+        words = doc.split()
+        start = 0
+
+        while start < len(words):
+            chunk = words[start:start + chunk_size]
+            chunks.append(" ".join(chunk))
+            start += chunk_size - overlap
 
     return chunks

@@ -2,10 +2,10 @@ import os
 from langchain_huggingface import HuggingFaceEndpoint
 
 def generate_response(prompt: str) -> str:
-    \"\"\"
+    """
     Sends a prompt to the LLM and returns the generated response.
     Uses Hugging Face Inference API for open-source models.
-    \"\"\"
+    """
     api_token = os.environ.get("HUGGINGFACEHUB_API_TOKEN")
     if not api_token:
         return "[Error] HUGGINGFACEHUB_API_TOKEN environment variable not set. Please set it to use the LLM."

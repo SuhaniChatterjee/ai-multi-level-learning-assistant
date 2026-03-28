@@ -6,14 +6,14 @@ def run_rag_pipeline(
     question: str,
     difficulty_level: str
 ) -> tuple[str, str]:
-    \"\"\"
+    """
     Retrieves context from the FAISS vector store,
     combines it with the difficulty-level prompt,
     and user question to generate a final answer.
     
     Returns:
         tuple containing (LLM response, retrieved context)
-    \"\"\"
+    """
     
     # 1. Retrieve context chunks from Vector Store
     try:
@@ -28,7 +28,7 @@ def run_rag_pipeline(
     # 2. Build prompt
     instruction = get_prompt_template(difficulty_level)
 
-    final_prompt = f\"\"\"
+    final_prompt = f"""
 You are a helpful AI tutor.
 
 Instructions:
@@ -41,7 +41,7 @@ Question:
 {question}
 
 Answer:
-\"\"\"
+"""
 
     # 3. Generate Answer
     response = generate_response(final_prompt)

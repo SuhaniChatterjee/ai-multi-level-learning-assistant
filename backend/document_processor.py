@@ -3,9 +3,9 @@ from pypdf import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 def extract_text_from_pdf(pdf_path: str) -> str:
-    \"\"\"
+    """
     Extracts text from a given PDF file.
-    \"\"\"
+    """
     if not os.path.exists(pdf_path):
         raise FileNotFoundError(f"File not found: {pdf_path}")
     
@@ -18,9 +18,9 @@ def extract_text_from_pdf(pdf_path: str) -> str:
     return text
 
 def chunk_text(text: str, chunk_size: int = 1000, chunk_overlap: int = 200) -> list[str]:
-    \"\"\"
+    """
     Splits text into smaller chunks for vector embedding.
-    \"\"\"
+    """
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,

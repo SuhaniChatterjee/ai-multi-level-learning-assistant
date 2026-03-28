@@ -12,10 +12,10 @@ VECTOR_STORE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "faiss
 CHUNKS_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "chunks.pkl")
 
 def create_vector_store(chunks: list[str]) -> faiss.IndexFlatL2:
-    \"\"\"
+    """
     Embeds text chunks and stores them in a FAISS index.
     Saves the index and the corresponding chunks to disk.
-    \"\"\"
+    """
     if not chunks:
         raise ValueError("No chunks provided to create the vector store.")
 
@@ -39,9 +39,9 @@ def create_vector_store(chunks: list[str]) -> faiss.IndexFlatL2:
     return index
 
 def load_vector_store() -> tuple[faiss.IndexFlatL2, list[str]]:
-    \"\"\"
+    """
     Loads the FAISS index and the corresponding chunks from disk.
-    \"\"\"
+    """
     if not os.path.exists(VECTOR_STORE_PATH) or not os.path.exists(CHUNKS_PATH):
         raise FileNotFoundError("Vector store or chunks file not found. Please create them first.")
     
@@ -52,9 +52,9 @@ def load_vector_store() -> tuple[faiss.IndexFlatL2, list[str]]:
     return index, chunks
 
 def search_vector_store(query: str, top_k: int = 3) -> list[str]:
-    \"\"\"
+    """
     Embeds a query, searches the FAISS index, and returns the top_k most relevant chunks.
-    \"\"\"
+    """
     index, chunks = load_vector_store()
     
     query_embedding = model.encode([query])

@@ -1,4 +1,24 @@
-__pycache__/
+# Environments
 .env
 .venv
-*.db
+env/
+venv/
+ENV/
+
+# Secrets
+.streamlit/secrets.toml
+
+# OS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Temporary scripts
+run.sh
+
+# Data
+data/faiss_index.bin
+data/chunks.pkl

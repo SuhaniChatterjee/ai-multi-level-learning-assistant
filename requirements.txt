@@ -4,3 +4,4 @@ sentence-transformers
 pypdf
 google-generativeai
 google-generativeai
+langchain-huggingface

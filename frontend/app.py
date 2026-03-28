@@ -57,8 +57,8 @@ question = st.text_input("What concept would you like explained?")
 if st.button("Get Explanation"):
     if not question:
         st.warning("Please enter a question.")
-    elif not os.environ.get("GEMINI_API_KEY"):
-        st.error("Please set the GEMINI_API_KEY environment variable. You can export GEMINI_API_KEY=your_key in your terminal.")
+    elif not os.environ.get("HUGGINGFACEHUB_API_TOKEN"):
+        st.error("Please set the HUGGINGFACEHUB_API_TOKEN environment variable. You can export HUGGINGFACEHUB_API_TOKEN=your_token in your terminal.")
     else:
         with st.spinner(f"Generating {difficulty}-level explanation..."):
             response, context = run_rag_pipeline(question, difficulty)

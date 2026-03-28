@@ -71,3 +71,7 @@ if st.button("Get Explanation"):
                 
                 with st.expander("🔍 Show Source Context Used"):
                     st.text(context)
+
+st.markdown("---")
+st.markdown("<div style='text-align: center; color: grey;'>Built with Streamlit, FAISS, and HuggingFace 🚀</div>", unsafe_allow_html=True)
+

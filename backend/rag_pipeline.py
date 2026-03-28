@@ -43,6 +43,11 @@ Question:
 Answer:
 """
 
+    import logging
+    logging.basicConfig(level=logging.INFO)
+    logging.info(f"Generating {difficulty_level} explanation for query.")
+    
     # 3. Generate Answer
     response = generate_response(final_prompt)
+    logging.info("Explanation generated successfully.")
     return response, context

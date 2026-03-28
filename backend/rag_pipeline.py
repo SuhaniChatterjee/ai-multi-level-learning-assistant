@@ -1,33 +1,48 @@
 from backend.prompt_templates import get_prompt_template
 from backend.llm_engine import generate_response
-
+from backend.vector_store import search_vector_store
 
 def run_rag_pipeline(
     question: str,
-    context: str,
     difficulty_level: str
-) -> str:
-    """
-    Combines retrieved context, difficulty-level prompt,
+) -> tuple[str, str]:
+    \"\"\"
+    Retrieves context from the FAISS vector store,
+    combines it with the difficulty-level prompt,
     and user question to generate a final answer.
-    """
+    
+    Returns:
+        tuple containing (LLM response, retrieved context)
+    \"\"\"
+    
+    # 1. Retrieve context chunks from Vector Store
+    try:
+        retrieved_chunks = search_vector_store(question, top_k=3)
+        context = "\\n\\n---\\n\\n".join(retrieved_chunks)
+    except FileNotFoundError:
+        return "[Error] Knowledge base not found. Please upload a PDF first.", ""
 
+    if not context:
+        return "I couldn't find any relevant information in the uploaded documents to answer your question.", ""
+
+    # 2. Build prompt
     instruction = get_prompt_template(difficulty_level)
 
-    final_prompt = f"""
+    final_prompt = f\"\"\"
 You are a helpful AI tutor.
 
 Instructions:
 {instruction}
 
-Context (use ONLY this information):
+Context (use ONLY this information to answer):
 {context}
 
 Question:
 {question}
 
 Answer:
-"""
+\"\"\"
 
+    # 3. Generate Answer
     response = generate_response(final_prompt)
-    return response
+    return response, context

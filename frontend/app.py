@@ -1,3 +1,7 @@
+\"\"\"
+Main Streamlit application for the AI Multi-Level Learning Assistant.
+Handles PDF ingestion, user queries, and displays dynamic explanations.
+\"\"\"
 import streamlit as st
 import tempfile
 import os

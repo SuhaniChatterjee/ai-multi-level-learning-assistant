@@ -293,6 +293,13 @@ html, body, [class*="css"] {
     transition: all 0.2s ease !important;
 }
 
+/* Ensure Placeholder Text is Visible */
+.stTextInput > div > div > input::placeholder, 
+textarea::placeholder {
+    color: #94A3B8 !important;
+    opacity: 1 !important;
+}
+
 .stTextInput > div > div > input:focus, .stSelectbox > div > div > div:focus {
     border-color: #3B82F6 !important;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), inset 0 2px 4px rgba(0,0,0,0.01) !important;

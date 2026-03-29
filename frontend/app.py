@@ -16,56 +16,152 @@ from backend.rag_pipeline import run_rag_pipeline
 
 st.set_page_config(page_title="Cognitive Assistant", layout="centered")
 
-# Inject Custom Modern 3D/Animated CSS
+# Inject Custom Sky & Clouds 3D/Animated CSS
 CUSTOM_CSS = """
 <style>
 /* Global Font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-html, body, [class*="css"]  {
+html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
     color: #1E293B !important;
 }
 
-/* Animated Gradient Background for the App */
+/* Light Blue Sky Background */
 .stApp {
-    background: linear-gradient(-45deg, #F8FAFC, #E2E8F0, #F1F5F9, #E0E7FF);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
+    background: linear-gradient(180deg, #90CDF4 0%, #E2E8F0 100%) !important;
+    background-attachment: fixed !important;
+}
+[data-testid="stAppViewContainer"], [data-testid="stHeader"] {
+    background: transparent !important;
 }
 
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+/* Floating Clouds System */
+.clouds-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
 }
+
+.cloud {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 200px;
+    position: absolute;
+    filter: blur(3px); /* Soft fluffiness */
+    box-shadow: inset 0 -5px 15px rgba(0,0,0,0.03);
+}
+.cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+}
+
+.cloud1 {
+    width: 320px; height: 110px;
+    top: 15%;
+    opacity: 0.8;
+    animation: float1 45s linear infinite;
+    transform: scale(1.1);
+}
+.cloud1::before { width: 140px; height: 140px; top: -60px; left: 40px; }
+.cloud1::after { width: 100px; height: 100px; top: -40px; right: 40px; }
+
+.cloud2 {
+    width: 250px; height: 80px;
+    top: 40%;
+    opacity: 0.5;
+    animation: float2 60s linear infinite;
+    transform: scale(0.85);
+}
+.cloud2::before { width: 110px; height: 110px; top: -50px; left: 30px; }
+.cloud2::after { width: 80px; height: 80px; top: -30px; right: 30px; }
+
+.cloud3 {
+    width: 380px; height: 130px;
+    top: 70%;
+    opacity: 0.7;
+    animation: float1 55s linear infinite;
+    transform: scale(1.3);
+    animation-delay: -20s;
+}
+.cloud3::before { width: 180px; height: 180px; top: -80px; left: 60px; }
+.cloud3::after { width: 120px; height: 120px; top: -50px; right: 60px; }
+
+.cloud4 {
+    width: 200px; height: 70px;
+    top: 25%;
+    opacity: 0.4;
+    animation: float2 35s linear infinite;
+    transform: scale(0.6);
+    animation-delay: -10s;
+}
+.cloud4::before { width: 90px; height: 90px; top: -40px; left: 20px; }
+.cloud4::after { width: 70px; height: 70px; top: -30px; right: 20px; }
+
+.cloud5 {
+    width: 280px; height: 90px;
+    top: 85%;
+    opacity: 0.6;
+    animation: float1 70s linear infinite;
+    transform: scale(0.9);
+    animation-delay: -35s;
+}
+.cloud5::before { width: 120px; height: 120px; top: -50px; left: 40px; }
+.cloud5::after { width: 80px; height: 80px; top: -30px; right: 30px; }
+
+@keyframes float1 {
+    0% { left: -500px; transform: scale(1.1) translateY(0px); }
+    50% { transform: scale(1.1) translateY(10px); }
+    100% { left: 110vw; transform: scale(1.1) translateY(0px); }
+}
+@keyframes float2 {
+    0% { left: 110vw; transform: scale(0.85) translateY(0px); }
+    50% { transform: scale(0.85) translateY(-8px); }
+    100% { left: -500px; transform: scale(0.85) translateY(0px); }
+}
+
+/* Elevate Main Content to sit above clouds */
+.stApp > header { z-index: 50 !important; }
+.main { z-index: 10 !important; position: relative; }
 
 /* Sidebar Styling */
+[data-testid="stSidebar"] > div:first-child {
+    background: rgba(255, 255, 255, 0.45) !important;
+    backdrop-filter: blur(30px) !important;
+    -webkit-backdrop-filter: blur(30px) !important;
+    border-right: 1px solid rgba(255,255,255,0.8) !important;
+    z-index: 100 !important;
+}
 [data-testid="stSidebar"] {
-    background: rgba(255, 255, 255, 0.4) !important;
-    backdrop-filter: blur(24px) !important;
-    -webkit-backdrop-filter: blur(24px) !important;
-    border-right: 1px solid rgba(255,255,255,0.6) !important;
+    background: transparent !important;
 }
 
 /* Advanced 3D Glassmorphism Cards for Containers */
 [data-testid="stVerticalBlockBorderWrapper"] {
-    background: rgba(255, 255, 255, 0.65) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(25px) !important;
+    -webkit-backdrop-filter: blur(25px) !important;
     border-radius: 20px !important;
-    border: 1px solid rgba(255, 255, 255, 0.7) !important;
+    border: 1px solid rgba(255, 255, 255, 0.9) !important;
     box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.04), 
+        0 20px 40px rgba(0, 0, 0, 0.05), 
         inset 0 1px 0 rgba(255, 255, 255, 1) !important;
     padding: 1.8rem !important;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    z-index: 20;
+    position: relative;
 }
 
 [data-testid="stVerticalBlockBorderWrapper"]:hover {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
     box-shadow: 
-        0 30px 60px rgba(0, 0, 0, 0.08), 
+        0 30px 60px rgba(0, 50, 150, 0.1), 
         inset 0 1px 0 rgba(255, 255, 255, 1) !important;
 }
 
@@ -74,21 +170,25 @@ html, body, [class*="css"]  {
     text-align: center;
     font-size: 3.5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #0F172A 0%, #2563EB 100%);
+    background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 0.5rem;
     letter-spacing: -0.03em;
     animation: fadeInDown 0.8s ease-out;
+    position: relative;
+    z-index: 20;
 }
 
 .hero-subtitle {
     text-align: center;
-    color: #475569;
+    color: #334155;
     font-size: 1.15rem;
-    font-weight: 400;
+    font-weight: 500;
     margin-bottom: 3rem;
     animation: fadeInDown 1s ease-out;
+    position: relative;
+    z-index: 20;
 }
 
 @keyframes fadeInDown {
@@ -97,9 +197,9 @@ html, body, [class*="css"]  {
 }
 
 .section-heading {
-    color: #0F172A;
-    font-weight: 700;
-    font-size: 0.95rem;
+    color: #1E293B;
+    font-weight: 800;
+    font-size: 1.05rem;
     margin-bottom: 12px;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -107,17 +207,17 @@ html, body, [class*="css"]  {
 
 /* 3D Animated Button */
 .stButton > button {
-    background: linear-gradient(135deg, #2563EB, #1D4ED8) !important;
+    background: linear-gradient(135deg, #3B82F6, #1D4ED8) !important;
     color: #FFFFFF !important;
     border-radius: 12px !important;
     border: none !important;
     padding: 12px 24px !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
     letter-spacing: 0.5px !important;
     box-shadow: 
-        0 4px 6px rgba(37, 99, 235, 0.2), 
+        0 6px 12px rgba(37, 99, 235, 0.25), 
         0 1px 3px rgba(0, 0, 0, 0.1), 
-        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
     position: relative;
     overflow: hidden;
@@ -130,7 +230,7 @@ html, body, [class*="css"]  {
     left: -100%;
     width: 50%;
     height: 100%;
-    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
     transform: skewX(-20deg);
     animation: shine 4s infinite;
 }
@@ -142,11 +242,11 @@ html, body, [class*="css"]  {
 }
 
 .stButton > button:hover {
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-3px) scale(1.02);
     box-shadow: 
-        0 12px 20px rgba(37, 99, 235, 0.3), 
-        0 4px 6px rgba(0, 0, 0, 0.1), 
-        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+        0 15px 25px rgba(37, 99, 235, 0.35), 
+        0 5px 10px rgba(0, 0, 0, 0.1), 
+        inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
 }
 
 .stButton > button:active {
@@ -154,27 +254,11 @@ html, body, [class*="css"]  {
     box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3) !important;
 }
 
-/* Inputs and Selects */
-.stTextInput > div > div > input, .stSelectbox > div > div > div {
-    border-radius: 10px !important;
-    border: 1px solid rgba(148, 163, 184, 0.3) !important;
-    background: rgba(255, 255, 255, 0.8) !important;
-    color: #1E293B !important;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important;
-    transition: all 0.2s ease !important;
-}
-
-.stTextInput > div > div > input:focus, .stSelectbox > div > div > div:focus {
-    border-color: #3B82F6 !important;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), inset 0 2px 4px rgba(0,0,0,0.01) !important;
-    background: #FFFFFF !important;
-}
-
 /* Premium File Dropzone */
 [data-testid="stFileUploadDropzone"] {
     background: rgba(255, 255, 255, 0.85) !important;
     border-radius: 16px !important;
-    border: 2px dashed rgba(37, 99, 235, 0.4) !important;
+    border: 2px dashed rgba(59, 130, 246, 0.5) !important;
     transition: all 0.3s ease;
     padding: 2rem !important;
 }
@@ -185,7 +269,7 @@ html, body, [class*="css"]  {
 
 /* Force Browse Files Button to Match Theme */
 [data-testid="stFileUploadDropzone"] button {
-    background: linear-gradient(135deg, #2563EB, #1D4ED8) !important;
+    background: linear-gradient(135deg, #3B82F6, #1D4ED8) !important;
     color: #FFFFFF !important;
     border-radius: 50px !important;
     border: none !important;
@@ -197,7 +281,52 @@ html, body, [class*="css"]  {
 [data-testid="stFileUploadDropzone"] button:hover {
     transform: translateY(-2px) scale(1.02) !important;
     box-shadow: 0 8px 16px rgba(37, 99, 235, 0.4) !important;
+}
+
+/* Inputs and Selects */
+.stTextInput > div > div > input, .stSelectbox > div > div > div {
+    border-radius: 10px !important;
+    border: 1px solid rgba(148, 163, 184, 0.4) !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #1E293B !important;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.02) !important;
+    transition: all 0.2s ease !important;
+}
+
+.stTextInput > div > div > input:focus, .stSelectbox > div > div > div:focus {
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), inset 0 2px 4px rgba(0,0,0,0.01) !important;
+    background: #FFFFFF !important;
+}
+
+/* STRONGLY FORCE TEXT COLORS FOR DARK MODE COMPATIBILITY */
+[data-testid="stMarkdownContainer"] *,
+[data-testid="stMarkdownContainer"] p,
+[data-testid="stMarkdownContainer"] li,
+[data-testid="stMarkdownContainer"] span,
+[data-testid="stMarkdownContainer"] h1,
+[data-testid="stMarkdownContainer"] h2,
+[data-testid="stMarkdownContainer"] h3,
+[data-testid="stFileUploadDropzone"] *, 
+[data-testid="stExpander"] * {
+    color: #1E293B !important;
+}
+[data-testid="stFileUploadDropzone"] button,
+[data-testid="stFileUploadDropzone"] button * {
     color: #FFFFFF !important;
+}
+
+/* Exceptions */
+.hero-title, .hero-subtitle {
+    -webkit-text-fill-color: initial;
+}
+.hero-title {
+    background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+p.hero-subtitle {
+    color: #334155 !important;
 }
 
 /* Spinner Animation Override */
@@ -205,41 +334,10 @@ html, body, [class*="css"]  {
     border-color: #3B82F6 transparent transparent transparent !important;
 }
 
-/* STRONGLY FORCE TEXT COLORS FOR DARK MODE COMPATIBILITY */
-[data-testid="stMarkdownContainer"] p,
-[data-testid="stMarkdownContainer"] li,
-[data-testid="stMarkdownContainer"] span,
-[data-testid="stMarkdownContainer"] strong,
-[data-testid="stMarkdownContainer"] em,
-[data-testid="stMarkdownContainer"] a,
-[data-testid="stMarkdownContainer"] h1,
-[data-testid="stMarkdownContainer"] h2,
-[data-testid="stMarkdownContainer"] h3,
-[data-testid="stMarkdownContainer"] h4 {
-    color: #1E293B !important;
-}
-
-[data-testid="stFileUploadDropzone"] span, 
-[data-testid="stFileUploadDropzone"] p, 
-[data-testid="stFileUploadDropzone"] small {
-    color: #1E293B !important;
-}
-/* Crucially exempt button text from global dark mode overrides */
-[data-testid="stFileUploadDropzone"] button * {
-    color: #FFFFFF !important;
-}
-
-[data-testid="stExpander"] p,
-[data-testid="stExpander"] span,
-[data-testid="stExpander"] div,
-[data-testid="stExpander"] summary * {
-    color: #1E293B !important;
-}
-
 /* Minimal Footer */
 .footer-text {
     text-align: center; 
-    color: #475569 !important; 
+    color: #64748B !important; 
     font-size: 0.85rem; 
     margin-top: 4rem;
     font-weight: 500;
@@ -249,9 +347,21 @@ html, body, [class*="css"]  {
 """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
+# Inject animated clouds HTML
+CLOUDS_HTML = """
+<div class="clouds-container">
+  <div class="cloud cloud1"></div>
+  <div class="cloud cloud2"></div>
+  <div class="cloud cloud3"></div>
+  <div class="cloud cloud4"></div>
+  <div class="cloud cloud5"></div>
+</div>
+"""
+st.markdown(CLOUDS_HTML, unsafe_allow_html=True)
+
 # Main App Header
 st.markdown("<div class='hero-title'>Cognitive Assistant</div>", unsafe_allow_html=True)
-st.markdown("<div class='hero-subtitle'>Upload your documents and receive context-aware explanations tailored to your expertise level.</div>", unsafe_allow_html=True)
+st.markdown("<p class='hero-subtitle'>Upload your documents and receive context-aware explanations tailored to your expertise level.</p>", unsafe_allow_html=True)
 
 # Sidebar
 with st.sidebar:
@@ -289,7 +399,7 @@ with st.sidebar:
         )
 
 # Main Question Input
-st.markdown("<div class='section-heading' style='text-align: center; margin-top: 1rem; color: #64748B;'>Query Engine</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-heading' style='text-align: center; margin-top: 1rem; color: #475569;'>Query Engine</div>", unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1, 6, 1])
 with col2:

@@ -1,10 +1,11 @@
 from backend.prompt_templates import get_prompt_template
-from backend.llm_engine import generate_response
+from backend.llm_engine import generate_response, rephrase_question
 from backend.vector_store import search_vector_store
 
 def run_rag_pipeline(
     question: str,
-    difficulty_level: str
+    difficulty_level: str,
+    chat_history: list = None
 ) -> tuple[str, str]:
     """
     Retrieves context from the FAISS vector store,
@@ -17,8 +18,14 @@ def run_rag_pipeline(
     
     # 1. Retrieve context chunks from Vector Store
     try:
-        retrieved_chunks = search_vector_store(question, top_k=3)
-        context = "\\n\\n---\\n\\n".join(retrieved_chunks)
+        search_query = question
+        if chat_history:
+            search_query = rephrase_question(chat_history, question)
+            import logging
+            logging.info(f"Rephrased question for retrieval: {search_query}")
+            
+        retrieved_chunks = search_vector_store(search_query, top_k=3)
+        context = "\n\n---\n\n".join(retrieved_chunks)
     except FileNotFoundError:
         return "[Error] Knowledge base not found. Please upload a PDF first.", ""
 
@@ -48,6 +55,6 @@ Answer:
     logging.info(f"Generating {difficulty_level} explanation for query.")
     
     # 3. Generate Answer
-    response = generate_response(final_prompt)
+    response = generate_response(final_prompt, chat_history)
     logging.info("Explanation generated successfully.")
     return response, context

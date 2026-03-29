@@ -408,35 +408,52 @@ with st.sidebar:
             label_visibility="collapsed"
         )
 
+# Initialize session state for messages
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
 # Main Question Input
 st.markdown("<div class='section-heading' style='text-align: center; margin-top: 1rem; color: #475569;'>Query Engine</div>", unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([1, 6, 1])
-with col2:
-    question = st.text_input("Concept to explain:", label_visibility="collapsed", placeholder="Enter the technical concept or question...")
-    
-    # Add a slight top padding to the button
-    st.markdown("<div style='margin-top: 1.2rem;'></div>", unsafe_allow_html=True)
-    submitted = st.button("Synthesize Explanation", use_container_width=True)
+# Display chat messages from history on app rerun
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        if message["role"] == "assistant" and "context" in message:
+            with st.expander("View Retrieved Context"):
+                st.text(message["context"])
+        st.markdown(message["content"])
 
-if submitted:
-    if not question:
-        st.warning("Please provide a concept to explain.")
-    elif not os.environ.get("HUGGINGFACEHUB_API_TOKEN"):
+# React to user input
+if prompt := st.chat_input("Enter the technical concept or question..."):
+    # Display user message in chat message container
+    with st.chat_message("user"):
+        st.markdown(prompt)
+    
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    
+    if not os.environ.get("HUGGINGFACEHUB_API_TOKEN"):
         st.error("Authentication required: Please set the HUGGINGFACEHUB_API_TOKEN environment variable.")
     else:
-        with st.spinner("Synthesizing response..."):
-            response, context = run_rag_pipeline(question, difficulty)
-            
-            if response.startswith("[Error]"):
-                st.error(response)
-            else:
-                with st.container(border=True):
-                    st.markdown("<div class='section-heading' style='color: #2563EB; margin-bottom: 1rem;'>AI Analysis</div>", unsafe_allow_html=True)
-                    st.markdown(response)
+        with st.chat_message("assistant"):
+            with st.spinner("Synthesizing response..."):
+                # Pass all messages EXCEPT the last one (which is the current user query) to prevent duplication during LLM history processing
+                history_for_backend = st.session_state.messages[:-1]
+                response, context = run_rag_pipeline(prompt, difficulty, history_for_backend)
                 
-                with st.expander("View Retrieved Context"):
-                    st.text(context)
+                if response.startswith("[Error]"):
+                    st.error(response)
+                else:
+                    with st.expander("View Retrieved Context"):
+                        st.text(context)
+                    st.markdown(response)
+                    
+                    # Add assistant response to chat history
+                    st.session_state.messages.append({
+                        "role": "assistant", 
+                        "content": response,
+                        "context": context
+                    })
 
 st.markdown("---")
 st.markdown("<div class='footer-text'>Engineered with FAISS, Streamlit, and Qwen Models</div>", unsafe_allow_html=True)

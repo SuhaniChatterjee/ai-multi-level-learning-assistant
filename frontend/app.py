@@ -170,16 +170,34 @@ html, body, [class*="css"]  {
     background: #FFFFFF !important;
 }
 
-/* File Dropzone */
+/* Premium File Dropzone */
 [data-testid="stFileUploadDropzone"] {
-    background: rgba(248, 250, 252, 0.5) !important;
-    border-radius: 12px !important;
-    border: 2px dashed rgba(148, 163, 184, 0.5) !important;
+    background: rgba(255, 255, 255, 0.85) !important;
+    border-radius: 16px !important;
+    border: 2px dashed rgba(37, 99, 235, 0.4) !important;
     transition: all 0.3s ease;
+    padding: 2rem !important;
 }
 [data-testid="stFileUploadDropzone"]:hover {
-    border-color: #3B82F6 !important;
-    background: rgba(239, 246, 255, 0.8) !important;
+    border-color: #2563EB !important;
+    background: rgba(239, 246, 255, 0.95) !important;
+}
+
+/* Force Browse Files Button to Match Theme */
+[data-testid="stFileUploadDropzone"] button {
+    background: linear-gradient(135deg, #2563EB, #1D4ED8) !important;
+    color: #FFFFFF !important;
+    border-radius: 50px !important;
+    border: none !important;
+    padding: 8px 24px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+    transition: all 0.2s ease !important;
+}
+[data-testid="stFileUploadDropzone"] button:hover {
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.4) !important;
+    color: #FFFFFF !important;
 }
 
 /* Spinner Animation Override */
@@ -201,10 +219,14 @@ html, body, [class*="css"]  {
     color: #1E293B !important;
 }
 
-[data-testid="stFileUploadDropzone"] *, 
+[data-testid="stFileUploadDropzone"] span, 
 [data-testid="stFileUploadDropzone"] p, 
 [data-testid="stFileUploadDropzone"] small {
     color: #1E293B !important;
+}
+/* Crucially exempt button text from global dark mode overrides */
+[data-testid="stFileUploadDropzone"] button * {
+    color: #FFFFFF !important;
 }
 
 [data-testid="stExpander"] p,

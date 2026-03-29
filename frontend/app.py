@@ -321,6 +321,16 @@ textarea::placeholder {
 [data-testid="stExpander"] * {
     color: #1E293B !important;
 }
+
+/* Fix CSS for code blocks to be readable on dark backgrounds */
+[data-testid="stMarkdownContainer"] pre,
+[data-testid="stMarkdownContainer"] pre * {
+    color: #F8FAFC !important;
+}
+[data-testid="stMarkdownContainer"] code {
+    color: #E2E8F0 !important;
+}
+
 [data-testid="stFileUploadDropzone"] button,
 [data-testid="stFileUploadDropzone"] button * {
     color: #FFFFFF !important;
@@ -344,13 +354,41 @@ p.hero-subtitle {
     border-color: #3B82F6 transparent transparent transparent !important;
 }
 
-/* Minimal Footer */
-.footer-text {
-    text-align: center; 
-    color: #64748B !important; 
-    font-size: 0.85rem; 
-    margin-top: 4rem;
+/* Fix Bottom Bar Background & App Theming */
+[data-testid="stBottomBlockContainer"], 
+[data-testid="stBottom"], 
+[data-testid="stBottom"] > div {
+    background: transparent !important;
+    background-color: transparent !important;
+    padding-bottom: 25px !important;
+}
+[data-testid="stChatInput"] {
+    background: rgba(255, 255, 255, 0.75) !important;
+    backdrop-filter: blur(25px) !important;
+    -webkit-backdrop-filter: blur(25px) !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+}
+[data-testid="stChatInput"] textarea {
+    color: #FFFFFF !important;
+}
+/* Ensure the typing caret is also white */
+[data-testid="stChatInput"] textarea::placeholder {
+    color: #94A3B8 !important;
+}
+
+/* Footer centered relative to Chat Window using pseudo-element */
+[data-testid="stBottom"]::after {
+    content: "Engineered with FAISS, Streamlit, and Qwen Models";
+    display: block;
+    text-align: center;
+    color: #64748B;
+    font-size: 0.75rem;
     font-weight: 500;
+    margin-top: -10px;
+    padding-bottom: 15px;
+    pointer-events: none;
 }
 
 </style>
@@ -454,6 +492,3 @@ if prompt := st.chat_input("Enter the technical concept or question..."):
                         "content": response,
                         "context": context
                     })
-
-st.markdown("---")
-st.markdown("<div class='footer-text'>Engineered with FAISS, Streamlit, and Qwen Models</div>", unsafe_allow_html=True)

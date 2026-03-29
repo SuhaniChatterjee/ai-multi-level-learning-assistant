@@ -1,6 +1,9 @@
 import os
+from dotenv import load_dotenv
 from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
 from langchain_core.messages import HumanMessage
+
+load_dotenv()
 
 def generate_response(prompt: str) -> str:
     """

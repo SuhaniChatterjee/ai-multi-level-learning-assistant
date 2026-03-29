@@ -187,10 +187,37 @@ html, body, [class*="css"]  {
     border-color: #3B82F6 transparent transparent transparent !important;
 }
 
+/* STRONGLY FORCE TEXT COLORS FOR DARK MODE COMPATIBILITY */
+[data-testid="stMarkdownContainer"] p,
+[data-testid="stMarkdownContainer"] li,
+[data-testid="stMarkdownContainer"] span,
+[data-testid="stMarkdownContainer"] strong,
+[data-testid="stMarkdownContainer"] em,
+[data-testid="stMarkdownContainer"] a,
+[data-testid="stMarkdownContainer"] h1,
+[data-testid="stMarkdownContainer"] h2,
+[data-testid="stMarkdownContainer"] h3,
+[data-testid="stMarkdownContainer"] h4 {
+    color: #1E293B !important;
+}
+
+[data-testid="stFileUploadDropzone"] *, 
+[data-testid="stFileUploadDropzone"] p, 
+[data-testid="stFileUploadDropzone"] small {
+    color: #1E293B !important;
+}
+
+[data-testid="stExpander"] p,
+[data-testid="stExpander"] span,
+[data-testid="stExpander"] div,
+[data-testid="stExpander"] summary * {
+    color: #1E293B !important;
+}
+
 /* Minimal Footer */
 .footer-text {
     text-align: center; 
-    color: #94A3B8; 
+    color: #475569 !important; 
     font-size: 0.85rem; 
     margin-top: 4rem;
     font-weight: 500;

@@ -407,6 +407,55 @@ CLOUDS_HTML = """
 """
 st.markdown(CLOUDS_HTML, unsafe_allow_html=True)
 
+# Dark Mode Overrides
+is_dark_mode = st.sidebar.toggle("🌙 Dark Mode", value=False)
+if is_dark_mode:
+    DARK_CSS = """
+    <style>
+    .stApp {
+        background: linear-gradient(180deg, #020111 0%, #20124d 100%) !important;
+    }
+    .cloud {
+        background: rgba(70, 80, 100, 0.45) !important;
+        box-shadow: inset 0 -5px 15px rgba(0,0,0,0.5) !important;
+    }
+    .cloud::before, .cloud::after {
+        background: rgba(70, 80, 100, 0.45) !important;
+    }
+    
+    /* Panel and UI Adjustments for Dark Mode */
+    [data-testid="stSidebar"] > div:first-child,
+    [data-testid="stVerticalBlockBorderWrapper"],
+    [data-testid="stFileUploadDropzone"] {
+        background: rgba(15, 23, 42, 0.65) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+    }
+    
+    /* Text Color Adjustments */
+    html, body, [class*="css"],
+    .hero-subtitle, .section-heading, p, li, span, h1, h2, h3, h4,
+    [data-testid="stMarkdownContainer"] *,
+    [data-testid="stFileUploadDropzone"] * {
+        color: #F8FAFC !important;
+    }
+    
+    .hero-title {
+        background: linear-gradient(135deg, #93C5FD 0%, #E0F2FE 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+    }
+    
+    /* Inputs */
+    .stTextInput > div > div > input, .stSelectbox > div > div > div, [data-testid="stChatInput"] {
+        background: rgba(15, 23, 42, 0.8) !important;
+        color: #F8FAFC !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+    </style>
+    """
+    st.markdown(DARK_CSS, unsafe_allow_html=True)
+
 # Main App Header
 st.markdown("<div class='hero-title'>Cognitive Assistant</div>", unsafe_allow_html=True)
 st.markdown("<p class='hero-subtitle'>Upload your documents and receive context-aware explanations tailored to your expertise level.</p>", unsafe_allow_html=True)
